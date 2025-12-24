@@ -63,6 +63,13 @@ components:
       type: string
       enum: [patient, doctor, admin]
 
+    ChangeRoleRequest:
+      type: object
+      required: [role]
+      properties:
+        role:
+          $ref: "#/components/schemas/UserRole"
+
     User:
       type: object
       required: [id, email, role, name]
@@ -82,6 +89,83 @@ security:
   - bearerAuth: []
 
 paths:
+  /admin/users:
+    get:
+      summary: Получение списка всех пользователей (только для Admin)
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Список пользователей успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          description: Не авторизован (отсутствует токен)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Доступ запрещен (недостаточно прав)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/users/{id}/role:
+    patch:
+      summary: Изменение роли пользователя (только для Admin)
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeRoleRequest"
+      responses:
+        "200":
+          description: Роль успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "400":
+          description: Некорректные данные (например, неверная роль)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Доступ запрещен (недостаточно прав)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /auth/login:
     post:
       summary: Аутентификация пользователя (Вход)

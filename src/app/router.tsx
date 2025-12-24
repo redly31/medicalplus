@@ -7,6 +7,8 @@ import RegisterPage from "@/features/auth/register.page"
 import DoctorsListPage from "@/features/doctors-list/doctors-list.page"
 import { Providers } from "./providers"
 import { AuthGuard } from "./auth-guard"
+import AdminPage from "@/features/admin/admin.page"
+import DoctorPage from "@/features/doctor/doctor.page"
 
 export const router = createBrowserRouter([
   {
@@ -40,11 +42,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.ADMIN_DASHBOARD,
-        element: <div>Admin dash Page</div>,
+        element: <AdminPage />,
       },
       {
         path: ROUTES.DOCTOR_DASHBOARD,
-        element: <div>Doctor dash Page</div>,
+        element: <DoctorPage />,
       },
       {
         path: ROUTES.PROFILE,

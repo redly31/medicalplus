@@ -1,7 +1,11 @@
 import { HttpResponse } from "msw"
 import type { ApiSchemas } from "../../schema"
 import { http } from "../http"
-import { createRefreshTokenCookie, generateTokens } from "../session"
+import {
+  createRefreshTokenCookie,
+  generateTokens,
+  verifyToken,
+} from "../session"
 
 export const mockUsers: Omit<ApiSchemas["User"], "password">[] = [
   {
@@ -66,6 +70,57 @@ export const authHandlers = [
         "Set-Cookie": createRefreshTokenCookie(refreshToken),
       },
     })
+  }),
+
+  http.post("/auth/refresh", async ({ cookies }) => {
+    const refreshToken = cookies.refreshToken
+
+    if (!refreshToken) {
+      return HttpResponse.json(
+        {
+          code: "401",
+          message: "Refresh token не найден",
+        },
+        { status: 401 }
+      )
+    }
+
+    try {
+      const session = await verifyToken(refreshToken)
+      const user = mockUsers.find((u) => u.id === session.id)
+
+      if (!user) {
+        throw new Error("User not found")
+      }
+
+      const { accessToken, refreshToken: newRefreshToken } =
+        await generateTokens({
+          id: user.id!,
+          email: user.email!,
+          role: user.role!,
+        })
+
+      const response: ApiSchemas["AuthResponse"] = {
+        accessToken,
+        user,
+      }
+
+      return HttpResponse.json(response, {
+        status: 200,
+        headers: {
+          "Set-Cookie": createRefreshTokenCookie(newRefreshToken),
+        },
+      })
+    } catch (error) {
+      console.error("Error refreshing token:", error)
+      return HttpResponse.json(
+        {
+          message: "Недействительный refresh token",
+          code: "401",
+        },
+        { status: 401 }
+      )
+    }
   }),
 
   http.post("/auth/register", async ({ request }) => {
