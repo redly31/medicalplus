@@ -5,15 +5,12 @@ import {
   AlertTitle,
 } from "@/shared/ui/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import type { JSX } from "react"
 import AppointmentCard from "./appointment-card"
 
-export function AppointmentsList({
+export function DoctorAppointmentsList({
   appointments,
 }: {
   appointments: ApiSchemas["Appointment"][]
-  formatDate: (date: string) => string
-  getStatusBadge: (status: string) => JSX.Element
 }) {
   if (appointments.length === 0) {
     return (

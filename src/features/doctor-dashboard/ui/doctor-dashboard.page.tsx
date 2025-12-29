@@ -13,12 +13,10 @@ import {
 } from "@/shared/ui/components/ui/tabs"
 import { AlertCircle } from "lucide-react"
 import AvailableCard from "./available-card"
-import { getStatusBadge } from "../model/get-status-badge"
 import DashboardHeader from "./dashboard-header"
-import { AppointmentsList } from "./doctor-appointments-list"
-import { formatDate } from "../model/format-date"
+import { DoctorAppointmentsList } from "./doctor-appointments-list"
 import useDoctorAppointments from "../model/use-doctor-appointments"
-import { filterAppointments } from "../model/filter-appointments"
+import { filterAppointments } from "../../../shared/utils/filter-appointments"
 
 export default function DoctorDashboardPage() {
   const { appointments, isLoading, isError, error } = useDoctorAppointments()
@@ -99,44 +97,34 @@ export default function DoctorDashboardPage() {
               </AlertDescription>
             </Alert>
           ) : (
-            <AppointmentsList
-              appointments={appointments}
-              formatDate={formatDate}
-              getStatusBadge={getStatusBadge}
-            />
+            <DoctorAppointmentsList appointments={appointments} />
           )}
         </TabsContent>
 
         <TabsContent value="available" className="space-y-4">
-          <AppointmentsList
+          <DoctorAppointmentsList
             appointments={filterAppointments({
               appointments,
               status: "available",
             })}
-            formatDate={formatDate}
-            getStatusBadge={getStatusBadge}
           />
         </TabsContent>
 
         <TabsContent value="booked" className="space-y-4">
-          <AppointmentsList
+          <DoctorAppointmentsList
             appointments={filterAppointments({
               appointments,
               status: "booked",
             })}
-            formatDate={formatDate}
-            getStatusBadge={getStatusBadge}
           />
         </TabsContent>
 
         <TabsContent value="cancelled" className="space-y-4">
-          <AppointmentsList
+          <DoctorAppointmentsList
             appointments={filterAppointments({
               appointments,
               status: "cancelled",
             })}
-            formatDate={formatDate}
-            getStatusBadge={getStatusBadge}
           />
         </TabsContent>
       </Tabs>

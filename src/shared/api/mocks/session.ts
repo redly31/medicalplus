@@ -2,18 +2,19 @@ import { jwtVerify, SignJWT } from "jose"
 import type { ApiSchemas } from "../schema"
 import { HttpResponse } from "msw"
 import { JWTExpired } from "jose/errors"
-
-type Session = {
-  id: string
-  email: string
-  role: ApiSchemas["UserRole"]
-}
+import type { Session } from "@/shared/model/session"
 
 const JWT_SECRET = new TextEncoder().encode("your-secret-key")
 const ACCESS_TOKEN_EXPIRY = "5s"
 const REFRESH_TOKEN_EXPIRY = "7d"
 
-export async function generateTokens(session: Session) {
+type SessionDTO = {
+  id: string
+  email: string
+  role: ApiSchemas["UserRole"]
+}
+
+export async function generateTokens(session: SessionDTO) {
   const accessToken = await new SignJWT(session)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

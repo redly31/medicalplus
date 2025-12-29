@@ -4,12 +4,13 @@ import App from "./app"
 import { ROUTES } from "../shared/model/routes"
 import LoginPage from "@/features/auth/login.page"
 import RegisterPage from "@/features/auth/register.page"
-import DoctorsListPage from "@/features/doctors-list/doctors-list.page"
+import DoctorsListPage from "@/features/doctors-list/ui/doctors-list.page"
 import { Providers } from "./providers"
 import { AuthGuard } from "./auth-guard"
 import AdminPage from "@/features/admin/admin.page"
 import DoctorDashboardPage from "@/features/doctor-dashboard/ui/doctor-dashboard.page"
-import DoctorDetailPage from "@/features/doctors-list/doctor-detail.page"
+import DoctorDetailPage from "@/features/doctors-list/ui/doctor-detail.page"
+import ProfilePage from "@/features/profile/profile.page"
 
 export const router = createBrowserRouter([
   {
@@ -55,7 +56,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PROFILE,
-        element: <div>Profile Page</div>,
+        element: <ProfilePage />,
       },
       {
         path: "*",

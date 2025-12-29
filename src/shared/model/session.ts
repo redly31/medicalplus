@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode"
 import { publicFetchClient } from "../api/instance"
 import type { ApiSchemas } from "../api/schema"
 
-type Session = {
+export type Session = {
   id: string
   name: string
   email: string

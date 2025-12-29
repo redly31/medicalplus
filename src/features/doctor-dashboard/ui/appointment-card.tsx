@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/shared/ui/components/ui/card"
 import { Clock, User } from "lucide-react"
-import { formatDate } from "../model/format-date"
-import { getStatusBadge } from "../model/get-status-badge"
+import { getStatusBadge } from "../../../shared/utils/get-status-badge"
+import { formatDate } from "@/shared/utils/formatDate"
 
 type AppointmentCardProps = {
   appointment: ApiSchemas["Appointment"]
