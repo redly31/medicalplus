@@ -8,6 +8,7 @@ export default function AdminPage() {
   const {
     confirmDialog,
     getRoleLabel,
+    setConfirmDialog,
     handleRoleSelect,
     handleCancelRoleChange,
     handleConfirmRoleChange,
@@ -64,6 +65,7 @@ export default function AdminPage() {
         getRoleLabel={getRoleLabel}
         handleCancelRoleChange={handleCancelRoleChange}
         handleConfirmRoleChange={handleConfirmRoleChange}
+        setConfirmDialog={setConfirmDialog}
       />
     </div>
   )

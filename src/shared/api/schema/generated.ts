@@ -4,6 +4,105 @@
  */
 
 export interface paths {
+    "/doctors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Получение списка всех врачей
+         * @description Возвращает массив всех активных врачей. Доступно без авторизации.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Список врачей успешно получен */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Doctor"][];
+                    };
+                };
+                /** @description Ошибка сервера */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/doctors/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Получение данных конкретного врача
+         * @description Возвращает полную информацию о враче по его уникальному ID. Доступно без авторизации.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ID врача (не userId, а именно Doctor ID) */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Данные врача найдены */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Doctor"];
+                    };
+                };
+                /** @description Врач не найден */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/admin/users": {
         parameters: {
             query?: never;
@@ -327,6 +426,129 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/doctor/appointments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get doctor appointments
+         * @description Returns a list of all appointments (slots) for the doctor.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filter appointments by specific date */
+                    date?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description A list of appointments successfully retrieved */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Appointment"][];
+                    };
+                };
+                /** @description Некорректные данные */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Доступ запрещен (недостаточно прав) */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Пользователь не найден */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create appointment slots by doctor
+         * @description Doctor creates available appointment slots for a specific date
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AppointmentRequest"];
+                };
+            };
+            responses: {
+                /** @description Appointment slots successfully created */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Appointment"][];
+                    };
+                };
+                /** @description Некорректные данные */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Доступ запрещен (недостаточно прав) */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Пользователь не найден */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -357,6 +579,14 @@ export interface components {
         UserRole: "patient" | "doctor" | "admin";
         ChangeRoleRequest: {
             role: components["schemas"]["UserRole"];
+            /** @description Обязательно, если role == 'doctor' */
+            doctorData?: {
+                specialization?: string;
+                licenseNumber?: string;
+                experience?: number;
+                bio?: string;
+                education?: string;
+            } | null;
         };
         User: {
             /** Format: uuid */
@@ -365,6 +595,60 @@ export interface components {
             email: string;
             name: string;
             role: components["schemas"]["UserRole"];
+        };
+        Doctor: {
+            /** Format: uuid */
+            id: string;
+            /**
+             * Format: uuid
+             * @description Ссылка на User
+             */
+            userId: string;
+            /** @description Имя врача из профиля User */
+            name: string;
+            /**
+             * Format: email
+             * @description Email врача из профиля User
+             */
+            email: string;
+            /** @example Кардиолог */
+            specialization: string;
+            /** @example MD-12345 */
+            licenseNumber: string;
+            /** @description Количество лет опыта */
+            experience: number;
+            /** @description Биография врача */
+            bio?: string;
+            /** @description Образование */
+            education?: string;
+            /** Format: float */
+            rating?: number;
+            /** @description Активен ли врач для записи */
+            isActive: boolean;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        AppointmentRequest: {
+            date: string;
+            time: string;
+            /** @enum {string} */
+            status: "available" | "booked" | "cancelled";
+        };
+        Appointment: {
+            /** Format: uuid */
+            id: string;
+            doctorId: string;
+            /** Format: date */
+            date: string;
+            time: string;
+            /** @enum {string} */
+            status: "available" | "booked" | "cancelled";
+            patientId?: string | null;
+            patientName?: string | null;
+            /** Format: date-time */
+            createdAt: string;
         };
     };
     responses: never;

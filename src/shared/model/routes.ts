@@ -5,8 +5,8 @@ export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
   DOCTORS_LIST: "/doctors-list",
-  DOCTOR_DETAIL: "/doctor/:id",
+  DOCTOR_DETAIL: "/doctors-list/:doctorId",
   PROFILE: "/profile",
   ADMIN_DASHBOARD: "/admin-dashboard",
-  DOCTOR_DASHBOARD: "doctor-dashboard",
+  DOCTOR_DASHBOARD: "/doctor-dashboard",
 }

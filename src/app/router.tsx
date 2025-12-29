@@ -8,7 +8,8 @@ import DoctorsListPage from "@/features/doctors-list/doctors-list.page"
 import { Providers } from "./providers"
 import { AuthGuard } from "./auth-guard"
 import AdminPage from "@/features/admin/admin.page"
-import DoctorPage from "@/features/doctor/doctor.page"
+import DoctorDashboardPage from "@/features/doctor-dashboard/ui/doctor-dashboard.page"
+import DoctorDetailPage from "@/features/doctors-list/doctor-detail.page"
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.DOCTOR_DETAIL,
-        element: <div>Doctor Detail Page</div>,
+        element: <DoctorDetailPage />,
+        loader: async ({ params }) => {
+          if (!params.doctorId) throw redirect(ROUTES.DOCTORS_LIST)
+          return params.doctorId
+        },
       },
       {
         path: ROUTES.ADMIN_DASHBOARD,
@@ -46,7 +51,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.DOCTOR_DASHBOARD,
-        element: <DoctorPage />,
+        element: <DoctorDashboardPage />,
       },
       {
         path: ROUTES.PROFILE,

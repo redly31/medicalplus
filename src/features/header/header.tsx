@@ -21,10 +21,7 @@ const NAV_CONFIG: Record<Role, NavLink[]> = {
     { label: "Врачи", path: ROUTES.DOCTORS_LIST },
     { label: "Профиль", path: ROUTES.PROFILE },
   ],
-  doctor: [
-    { label: "Панель врача", path: ROUTES.DOCTOR_DASHBOARD },
-    { label: "Профиль", path: ROUTES.PROFILE },
-  ],
+  doctor: [{ label: "Панель врача", path: ROUTES.DOCTOR_DASHBOARD }],
   admin: [{ label: "Админ-панель", path: ROUTES.ADMIN_DASHBOARD }],
 }
 

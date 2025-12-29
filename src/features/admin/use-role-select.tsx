@@ -1,7 +1,14 @@
-// useRoleSelect.ts
 import { useState } from "react"
 import type { ApiSchemas } from "@/shared/api/schema"
 import { useAdminUsers } from "./use-admin-users"
+
+export type DoctorFormData = {
+  specialization: string
+  licenseNumber: string
+  experience: number
+  bio?: string
+  education?: string
+}
 
 export interface RoleChangeConfirmation {
   userId: string
@@ -41,10 +48,22 @@ export const useRoleSelect = () => {
 
   const handleCancelRoleChange = () => setConfirmDialog(null)
 
-  const handleConfirmRoleChange = () => {
+  const handleConfirmRoleChange = (doctorData?: DoctorFormData) => {
     if (!confirmDialog) return
-
-    changeUserRole(confirmDialog.userId, confirmDialog.newRole)
+    const requestBody: ApiSchemas["ChangeRoleRequest"] = {
+      role: confirmDialog.newRole,
+      doctorData:
+        confirmDialog.newRole === "doctor" && doctorData
+          ? {
+              specialization: doctorData.specialization,
+              licenseNumber: doctorData.licenseNumber,
+              experience: doctorData.experience,
+              bio: doctorData.bio || "",
+              education: doctorData.education || "",
+            }
+          : undefined,
+    }
+    changeUserRole(confirmDialog.userId, requestBody)
 
     setConfirmDialog(null)
   }

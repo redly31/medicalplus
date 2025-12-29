@@ -22,12 +22,15 @@ export const useAdminUsers = () => {
     }
   )
 
-  const changeUserRole = (userId: string, role: ApiSchemas["UserRole"]) => {
+  const changeUserRole = (
+    userId: string,
+    body: ApiSchemas["ChangeRoleRequest"]
+  ) => {
     changeUserRoleMutation.mutate({
       params: {
         path: { id: userId },
       },
-      body: { role },
+      body: body,
     })
   }
 
